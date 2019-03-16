@@ -90,39 +90,21 @@ def blosc_extension():
 def zstd_extension():
     info('setting up Zstandard extension')
 
-    zstd_sources = []
     extra_compile_args = base_compile_args.copy()
-    include_dirs = []
-    define_macros = []
 
-    # setup sources - use zstd bundled in blosc
-    zstd_sources += glob('c-blosc/internal-complibs/zstd*/common/*.c')
-    zstd_sources += glob('c-blosc/internal-complibs/zstd*/compress/*.c')
-    zstd_sources += glob('c-blosc/internal-complibs/zstd*/decompress/*.c')
-    zstd_sources += glob('c-blosc/internal-complibs/zstd*/dictBuilder/*.c')
-    include_dirs += [d for d in glob('c-blosc/internal-complibs/zstd*') if os.path.isdir(d)]
-    include_dirs += [d for d in glob('c-blosc/internal-complibs/zstd*/*') if os.path.isdir(d)]
-    # define_macros += [('CYTHON_TRACE', '1')]
+    # setup sources - use external zstd
+    libzstd = pkgconfig('libzstd')
+    extra_compile_args += libzstd.cflags
 
     sources = ['numcodecs/zstd.pyx']
-
-    # include assembly files
-    if cpuinfo.platform.machine() == 'x86_64':
-        extra_objects = [
-            S[:-1] + 'o' for S in glob("c-blosc/internal-complibs/zstd*/decompress/*amd64.S")
-        ]
-    else:
-        extra_objects = []
 
     # define extension module
     extensions = [
         Extension(
             'numcodecs.zstd',
-            sources=sources + zstd_sources,
-            include_dirs=include_dirs,
-            define_macros=define_macros,
+            sources=sources,
             extra_compile_args=extra_compile_args,
-            extra_objects=extra_objects,
+            extra_link_args=libzstd.libs,
         ),
     ]
 
