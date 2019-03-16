@@ -115,13 +115,10 @@ def lz4_extension():
     info('setting up LZ4 extension')
 
     extra_compile_args = base_compile_args.copy()
-    define_macros = []
 
-    # setup sources - use LZ4 bundled in blosc
-    lz4_sources = glob('c-blosc/internal-complibs/lz4*/*.c')
-    include_dirs = [d for d in glob('c-blosc/internal-complibs/lz4*') if os.path.isdir(d)]
-    include_dirs += ['numcodecs']
-    # define_macros += [('CYTHON_TRACE', '1')]
+    # setup LZ4
+    liblz4 = pkgconfig('liblz4')
+    extra_compile_args += liblz4.cflags
 
     sources = ['numcodecs/lz4.pyx']
 
@@ -129,10 +126,9 @@ def lz4_extension():
     extensions = [
         Extension(
             'numcodecs.lz4',
-            sources=sources + lz4_sources,
-            include_dirs=include_dirs,
-            define_macros=define_macros,
+            sources=sources,
             extra_compile_args=extra_compile_args,
+            extra_link_args=liblz4.libs,
         ),
     ]
 
