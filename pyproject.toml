@@ -53,9 +53,7 @@ docs = [
     "mock",
 ]
 test = [
-    "coverage",
     "pytest",
-    "pytest-cov",
 ]
 test_extras = [
     "importlib_metadata",
@@ -92,14 +90,8 @@ write_to = "numcodecs/version.py"
 skip = "./.git,fixture"
 ignore-words-list = "ba, compiletime, hist, nd, unparseable"
 
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "pragma: ${PY_MAJOR_VERSION} no cover",
-]
-
 [tool.pytest.ini_options]
-addopts = "--cov=numcodecs --cov-report xml --doctest-modules --doctest-glob=*.pyx"
+addopts = "--doctest-modules --doctest-glob=*.pyx"
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "ELLIPSIS",
