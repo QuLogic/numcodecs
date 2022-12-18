@@ -53,9 +53,7 @@ docs = [
     "mock",
 ]
 test = [
-    "coverage",
     "pytest",
-    "pytest-cov",
 ]
 test_extras = [
     "importlib_metadata",
@@ -92,17 +90,11 @@ write_to = "numcodecs/version.py"
 skip = "./.git,fixture"
 ignore-words-list = "ba, compiletime, hist, nd, unparseable"
 
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "pragma: ${PY_MAJOR_VERSION} no cover",
-]
-
 [tool.repo-review]
 ignore = ["PY005", "PY007", "PP302", "PP308", "PP309", "GH103", "GH212", "PC111", "PC140", "PC160", "PC170", "PC180", "MY100", "RF103"]
 
 [tool.pytest.ini_options]
-addopts = "-ra --strict-config --strict-markers --cov=numcodecs --cov-report xml --doctest-modules --doctest-glob=*.pyx"
+addopts = "-ra --strict-config --strict-markers --doctest-modules --doctest-glob=*.pyx"
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "ELLIPSIS",
